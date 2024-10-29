@@ -1,0 +1,118 @@
+import pygame
+from sys import exit
+
+FPS = 60
+yessir = True
+nope = False
+
+def quadInit():
+    pygame.init()
+    pygame.display.init()
+    pygame.font.init()
+    pygame.mixer.init()
+
+def peaceOutHomie():
+    pygame.quit()
+    exit()
+def isQuit(): 
+    for event in pygame.event.get():
+        clickedOut = event.type == pygame.QUIT
+        if clickedOut:
+            peaceOutHomie()
+def Off_On(on_or_off): 
+    if on_or_off > 0:
+        output = True
+    else:
+        output = False
+    return output
+def update():
+    pygame.display.update()
+
+myLightSwitch = Off_On(1) # it's kinda dark in here
+
+quadInit()
+class Screen:
+    def __init__(self, screen_width, screen_height, screen_color):
+        self.width  = screen_width
+        self.height = screen_height
+        self.color  = screen_color
+
+    def makeScreen(self):
+        self.screen = pygame.display.set_mode([self.width, self.height])
+        return self.screen
+    
+    def fillScreen(self, color):
+        self.screen.fill(color)
+
+def myScreen(screenObj):
+    return screenObj.makeScreen()
+
+def justFill(screenObj, color):
+    screenObj.fillScreen(color)
+
+screen = Screen(500,500,'blue')
+screen.width = 800
+inUse_screen = myScreen(screen)
+
+class CustomFont:
+    def __init__(self, color, font_size, isBold, pickFontNumber):
+        self.color = color
+        self.font_size = font_size
+        self.isBold = isBold
+        self.pickFontNumber = pickFontNumber
+
+def convertToFont(customFontObj):
+    convertedFont = pygame.font.SysFont(pygame.sysfont.get_fonts()[customFontObj.pickFontNumber],customFontObj.font_size,customFontObj.isBold)
+    return convertedFont
+
+def renderFont(convertedFont,customFontObj, text):
+    out = convertedFont.render(text, nope, customFontObj.color)
+    return out
+
+myFont = CustomFont('black',32,yessir,89)
+myFont.pickFontNumber = 20
+myFont.color = 'white'
+myConvertedFont = convertToFont(myFont)
+
+clock = pygame.time.Clock()
+gameRunning = True
+
+SPACE = pygame.K_SPACE
+UP = pygame.K_UP
+RIGHT = pygame.K_RIGHT
+LEFT = pygame.K_LEFT
+DOWN = pygame.K_DOWN
+
+def spaceCheck(isSpace, isUp, isDown, isLeft, isRight):
+    output = ''
+    if keys[isSpace]:
+        output = "SPACEBAR"
+    if keys[isUp]:
+        output = "UP"
+    if keys[isDown]:
+        output = "DOWN"
+    if keys[isLeft]:
+        output = "LEFT"
+    if keys[isRight]:
+        output = "RIGHT"
+    return output
+     
+
+while gameRunning:
+    isQuit()
+    pyEvents = pygame.event.get()
+    keys = pygame.key.get_pressed()
+    current_tick = pygame.time.get_ticks()
+
+    keyOutput = spaceCheck(SPACE, UP, DOWN, LEFT, RIGHT)
+    
+    justFill(screen,'black')
+    
+    hello_text = renderFont(myConvertedFont, myFont, keyOutput)
+    inUse_screen.blit(hello_text, [0,0])
+
+    update()
+    clock.tick(FPS)
+    
+
+
